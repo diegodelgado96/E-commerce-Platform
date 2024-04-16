@@ -143,3 +143,77 @@ To simulate the cloud environment according to the proposed architecture, we wil
 
         This command creates a table called Orders with an OrderId attribute as the primary hash key.
 
+## 3. CI/CD
+The next section will explain how the pipeline was built that will allow us to do continuous integration and continuous deployment of the lambda function in charge of the products.
+
+1. ```name: CI/CD for Product Service```
+    - This is the name of the workflow. Helps identify the main purpose of the workflow.
+
+1. 
+    ```
+    on:
+        push:
+            branches:
+            - main
+    ```
+
+    - Defines the events that will trigger this workflow. In this case, the workflow will be activated when a push is made to the main branch.
+
+1. 
+    ```
+    jobs:
+        deploy:
+            runs-on: ubuntu-latest
+    ```
+    - Defines a job called deploy that will run on the latest Ubuntu operating system.
+
+1. ```
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+    ```
+    - This step clones the GitHub repository to the workflow runtime.
+
+1. ```
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+    ``` 
+    - Configure the environment to run Node.js, setting the node to version 14.
+
+1. ```
+      - name: Install dependencies
+        run: npm install
+        working-directory: productService
+    ```
+    - Install the project dependencies using npm install in the product service directory.
+
+1. ```
+      - name: Build application
+        run: npm run build
+        working-directory: productService
+    ```
+    - Build the application by running npm run build in the product service directory.
+1. ```
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: YOUR_AWS_REGION
+    ```
+    - Configure the AWS credentials required to interact with AWS services. The access keys are taken from the repository secrets.
+1. ```
+      - name: Package service
+        run: zip -r productService.zip ./*
+        working-directory: productService
+    ```
+    - Packages the product service into a zip file in the product service directory.
+
+1. ```
+      - name: Deploy to Lambda
+        run: aws lambda update-function-code --function-name                ProductServiceLambda --zip-file fileb://productService.zip
+    ```
+    - Update the code of the lambda function called ProductServiceLambda with the zip file generated above.
+
