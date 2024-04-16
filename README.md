@@ -256,5 +256,14 @@ Two services were developed that will be contained in the lambda functions, for 
 
     The first command will make sure that we stop at the folder that corresponds to the service project of the orders, the second command will install the boto3 library which will be used to connect and query dynamoDB tables, the third command will prepare the .zip file for load it into lambda and finally the lambda function is loaded and will leave it ready to use.
 
+## 5. FrontEnd (Angular)
+
+This front end was built with angular and angular material, to run the project, you just have to run these lines:
+
+- ```cd Front-end ```
+- ```npm install```
+- ```npm run start```
+
+The first command will help us get to the Angular project folder, then all the dependencies will be installed and finally we will run the project locally.
 
 
