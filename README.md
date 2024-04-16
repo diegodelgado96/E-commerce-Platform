@@ -251,7 +251,7 @@ Two services were developed that will be contained in the lambda functions, for 
 
     - ```cd orderService```
     - ```pip install boto3```
-    - ```Compress-Archive -Path handler.py -DestinationPath 'orderService.zip' -force```
+    - ```Compress-Archive -Path lambda_function.py -DestinationPath 'orderService.zip' -force```
     - ```aws --endpoint-url=http://localhost:4566 lambda update-function-code --function-name OrderServiceLambda --zip-file fileb://orderService.zip```
 
     The first command will make sure that we stop at the folder that corresponds to the service project of the orders, the second command will install the boto3 library which will be used to connect and query dynamoDB tables, the third command will prepare the .zip file for load it into lambda and finally the lambda function is loaded and will leave it ready to use.
