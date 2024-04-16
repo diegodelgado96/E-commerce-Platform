@@ -20,18 +20,18 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: productService  # Cambia al directorio del servicio de productos
+        working-directory: productService  
 
       - name: Build application
         run: npm run build
-        working-directory: productService  # Cambia al directorio del servicio de productos
+        working-directory: productService  
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: <YOUR_AWS_REGION>
+          aws-region: us-east-1
 
       - name: Package service
         run: zip -r productService.zip ./*   # Empaqueta el servicio de productos en un archivo zip

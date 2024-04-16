@@ -43,6 +43,8 @@ volume/
 empty/
 node_modules/
 jspm_packages/
+productService/package-lock.json
+productService/productService.zip
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/

@@ -107,6 +107,16 @@ To simulate the cloud environment according to the proposed architecture, we wil
 
     - ```aws --endpoint-url=http://localhost:4566 apigateway put-method-response   --rest-api-id 7u5mpdhdj2   --resource-id d8vvit8m2l   --http-method GET   --status-code 200   --response-models "application/json=EMPTY"```
 
+    - ```aws --endpoint-url=http://localhost:4566 apigateway put-integration-response --rest-api-id pfnnx967y3 --resource-id b92tpevorw --http-method GET --status-code 200 ```
+
+    - ```aws --endpoint-url=http://localhost:4566 apigateway create-deployment --rest-api-id pfnnx967y3 --stage-name test```
+
+    The address to access the lambda function through the apigateway will be:
+    
+    > *http://localhost:4566/restapis/pfnnx967y3/test/_user_request_/products*
+    
+    > **NOTE:** keep in mind that 'pfnnx967y3' is the rest-api-id code   
+
 1. Create the resource for the order management service.
     - ```aws --endpoint-url=http://localhost:4566 apigateway create-resource --rest-api-id 7u5mpdhdj2 --parent-id a73drtiyzd --path-part orders```
 
@@ -139,7 +149,7 @@ To simulate the cloud environment according to the proposed architecture, we wil
 
     1. Create a table to store orders:
 
-        - ```aws --endpoint-url http://localhost:4566 dynamodb create-table --table-name Products --attribute-definitions AttributeName=ProductId,AttributeType=S --key-schema AttributeName=ProductId,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5```
+        - ```aws --endpoint-url http://localhost:4566 dynamodb create-table --table-name Orders --attribute-definitions AttributeName=OrderId,AttributeType=S --key-schema AttributeName=OrderId,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5```
 
         This command creates a table called Orders with an OrderId attribute as the primary hash key.
 
@@ -216,4 +226,17 @@ The next section will explain how the pipeline was built that will allow us to d
         run: aws lambda update-function-code --function-name                ProductServiceLambda --zip-file fileb://productService.zip
     ```
     - Update the code of the lambda function called ProductServiceLambda with the zip file generated above.
+
+## 4. Backend
+
+Two services were developed that will be contained in the lambda functions, for products the lambda function will be developed in Nodejs and for orders it will be developed in Python.
+
+### 1. ProductServiceLambda (Nodejs)
+- To prepare the project and be deployed in the lambda function, we only need to execute the following commands.
+    -  ```cd productService```
+    -  ```npm run deploy```
+
+    The first command will make sure that we stop at the folder that corresponds to the product service project and the second command will install the dependencies, prepare the .zip file to load into the lambda and finally it will load the lambda function and leave it ready to use .
+
+
 

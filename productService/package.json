@@ -1,0 +1,15 @@
+{
+  "name": "productservice",
+  "version": "1.0.0",
+  "description": "Lambda function for products",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "npm install && powershell Compress-Archive -Path index.js, package.json, package-lock.json, node_modules/*, output.json -DestinationPath 'productService.zip' -force && aws --endpoint-url=http://localhost:4566 lambda update-function-code --function-name ProductServiceLambda --zip-file fileb://productService.zip" 
+  },
+  "author": "Diego Danilo Delgado Arango",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1599.0"
+  }
+}
