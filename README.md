@@ -109,14 +109,6 @@ To simulate the cloud environment according to the proposed architecture, we wil
 
     - ```aws --endpoint-url=http://localhost:4566 apigateway put-integration-response --rest-api-id pfnnx967y3 --resource-id b92tpevorw --http-method GET --status-code 200 ```
 
-    - ```aws --endpoint-url=http://localhost:4566 apigateway create-deployment --rest-api-id pfnnx967y3 --stage-name test```
-
-    The address to access the lambda function through the apigateway will be:
-    
-    > *http://localhost:4566/restapis/pfnnx967y3/test/_user_request_/products*
-    
-    > **NOTE:** keep in mind that 'pfnnx967y3' is the rest-api-id code   
-
 1. Create the resource for the order management service.
     - ```aws --endpoint-url=http://localhost:4566 apigateway create-resource --rest-api-id 7u5mpdhdj2 --parent-id a73drtiyzd --path-part orders```
 
@@ -139,6 +131,22 @@ To simulate the cloud environment according to the proposed architecture, we wil
     - ```aws --endpoint-url=http://localhost:4566 apigateway put-integration --rest-api-id 7u5mpdhdj2 --resource-id tro1qvpsa2 --http-method GET --type AWS_PROXY --integration-http-method POST --uri arn:aws:apigateway:localhost:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:000000000000:function:OrderServiceLambda/invocations```
 
     - ```aws --endpoint-url=http://localhost:4566 apigateway put-method-response   --rest-api-id 7u5mpdhdj2   --resource-id tro1qvpsa2   --http-method GET   --status-code 200   --response-models "application/json=EMPTY"```
+
+    - - ```aws --endpoint-url=http://localhost:4566 apigateway put-integration-response --rest-api-id pfnnx967y3 --resource-id pyvt9zvyhy --http-method GET --status-code 200 ```
+
+1. Now we will expose the service to access the endpoints with the following command:
+
+    ```aws --endpoint-url=http://localhost:4566 apigateway create-deployment --rest-api-id pfnnx967y3 --stage-name test```
+
+    - The address to access the lambda function through the apigateway will be:
+        > *http://localhost:4566/restapis/pfnnx967y3/test/_user_request_*
+    
+    - In the case of lambda functions we must add /products or /orders as needed.
+
+        >*http://localhost:4566/restapis/pfnnx967y3/test/_user_request_/products*
+        >*http://localhost:4566/restapis/pfnnx967y3/test/_user_request_/orders*
+
+    > **NOTE:** keep in mind that 'pfnnx967y3' is the rest-api-id code 
 
 1. Finally we will create the tables in dynamodb
     1. Create a table to store the products:
@@ -237,6 +245,16 @@ Two services were developed that will be contained in the lambda functions, for 
     -  ```npm run deploy```
 
     The first command will make sure that we stop at the folder that corresponds to the product service project and the second command will install the dependencies, prepare the .zip file to load into the lambda and finally it will load the lambda function and leave it ready to use .
+
+### 2. OrderServiceLambda (Nodejs)
+- To prepare the project and deploy it to the lambda function, we only need to run the following commands.
+
+    - ```cd orderService```
+    - ```pip install boto3```
+    - ```Compress-Archive -Path handler.py -DestinationPath 'orderService.zip' -force```
+    - ```aws --endpoint-url=http://localhost:4566 lambda update-function-code --function-name OrderServiceLambda --zip-file fileb://orderService.zip```
+
+    The first command will make sure that we stop at the folder that corresponds to the service project of the orders, the second command will install the boto3 library which will be used to connect and query dynamoDB tables, the third command will prepare the .zip file for load it into lambda and finally the lambda function is loaded and will leave it ready to use.
 
 
 
